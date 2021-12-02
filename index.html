@@ -1,1 +1,384 @@
-<h1>上傳測試<h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>天氣卡片</title>
+  <link rel="stylesheet" href="./css/01-天氣卡片.css">
+  <!-- <link rel="stylesheet" href="./css/02-3D Fold out reveal.css"> -->
+</head>
+
+<body>
+  <div class="container">
+    <div class="cards">
+      <!-- <div class="card">
+          <img class="weater-pic" src="" alt="氣象圖" />
+          <label class="locationName"></label>
+          <label class="date"></label>
+          <label class="wx"></label>
+          <label class="PoP"></label>
+          <label class="MinT"></label>
+          <label class="CI"></label>
+          <label class="MaxT"></label>
+        </div> -->
+
+      <div class="card">
+        <div class="card__image-holder">
+          <img class="card__image" src="https://source.unsplash.com/300x225/?wave" alt="wave" />
+        </div>
+        <div class="card-title">
+          <a href="#" class="toggle-info btn">
+            <span class="left"></span>
+            <span class="right"></span>
+          </a>
+          <h2>
+            Card title
+            <small>Image from unsplash.com</small>
+          </h2>
+        </div>
+        <div class="card-flap flap1">
+          <div class="card-description">
+            This grid is an attempt to make something nice that works on touch devices. Ignoring hover states when
+            they're not available etc.
+          </div>
+          <div class="card-flap flap2">
+            <div class="card-actions">
+              <a href="#" class="btn">Read more</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__image-holder">
+          <img class="card__image" src="https://source.unsplash.com/300x225/?beach" alt="beach" />
+        </div>
+        <div class="card-title">
+          <a href="#" class="toggle-info btn">
+            <span class="left"></span>
+            <span class="right"></span>
+          </a>
+          <h2>
+            Card title
+            <small>Image from unsplash.com</small>
+          </h2>
+        </div>
+        <div class="card-flap flap1">
+          <div class="card-description">
+            This grid is an attempt to make something nice that works on touch devices. Ignoring hover states when
+            they're not available etc.
+          </div>
+          <div class="card-flap flap2">
+            <div class="card-actions">
+              <a href="#" class="btn">Read more</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
+    integrity='sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=='
+    crossorigin='anonymous'></script>
+
+  <!-- <script src="./js/02-02-3D Fold out reveal.js"></script> -->
+
+  <script>
+    function test() {
+      let url = 'https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-7ACB0A7A-2DF5-4A33-9C2C-CC9EC97B8596';
+
+      let card = '';
+      let cardsElement = document.querySelector('.cards');
+
+
+
+      //排序函式
+      //https://www.itread01.com/p/1080847.html
+      var sortBy = function (filed, rev, primer) {
+        rev = rev ? -1 : 1
+        return function (a, b) {
+          a = a[filed]
+          b = b[filed]
+          if (typeof primer != 'undefined') {
+            a = primer(a)
+            b = primer(b)
+          }
+          if (a < b) {
+            return rev * -1
+          }
+          if (a > b) {
+            return rev * 1
+          }
+          return 1
+        }
+      }
+      var sortBy2 = function (filed, rev, primer) {
+        rev = rev ? -1 : 1
+        return function (a, b) {
+          // a = a[filed]
+          // b = b[filed]
+          a = citys.indexOf(a[filed]);
+          b = citys.indexOf(b[filed]);
+          if (typeof primer != 'undefined') {
+            a = primer(a)
+            b = primer(b)
+          }
+          if (a < b) {
+            return rev * -1
+          }
+          if (a > b) {
+            return rev * 1
+          }
+          return 1
+        }
+      }
+      var sortBy3 = function (filed, rev, primer) {
+        rev = rev ? -1 : 1
+        return function (a, b) {
+          a = citys.indexOf(a[filed]);
+          b = citys.indexOf(b[filed]);
+
+          if (a < b) {
+            return rev * -1
+          }
+          if (a > b) {
+            return rev * 1
+          }
+          return 1
+        }
+      }
+
+      fetch(url)
+        .then(function (response) {
+          return response.json()
+        })
+        .then(function (data) {
+          let location = data['records']['location'];
+          console.log(location);
+          location.sort(sortBy2('locationName', true));
+
+          location.forEach((x) => {
+            let acityName = x['locationName'];
+            let adate = x['weatherElement'][0]['time'][0]['startTime'].substring(0, 10);
+            //氣象
+            let awx = x['weatherElement'][0]['time'][0]['parameter']['parameterName'];
+            //降雨機率
+            let aPoP = x['weatherElement'][1]['time'][0]['parameter']['parameterName'];
+            //最低溫
+            let aMinT = x['weatherElement'][2]['time'][0]['parameter']['parameterName'];
+            //最高溫
+            let aMaxT = x['weatherElement'][4]['time'][0]['parameter']['parameterName'];
+
+            //判斷圖檔動畫
+            let aimg = ''
+            //依降雨機率設置動畫
+            if (aPoP == 0) {
+              //晴天
+              aimg = `<svg class="sunny" viewBox="15 15 70 70">
+                        <circle id="sun" cx="50" cy="50" r="20">
+                            <animateTransform dur="5s" attributeName="transform" repeatCount="indefinite" type="rotate" from="0,50,50" to="360,50,50"></animateTransform>
+                        </circle>
+                    </svg>`
+            } else if (aPoP > '0' && aPoP <= 10) {
+              //晴時多雲
+              aimg = `<svg class="cloudy_sunny" viewbox="0 -5 100 100">
+                          <circle id="sun" cx="60" cy="40" r="15">
+                              <animateTransform dur="5s" attributeName="transform" repeatCount="indefinite" type="rotate" from="0,60,40"
+                                  to="360,60,40" />
+                          </circle>
+                          <g id="cloud">
+                              <circle cx="32" cy="35" r="15"></circle>
+                              <circle cx="50" cy="40" r="14"></circle>
+                              <rect width="70" height="30" x="5" y="35" rx="15"></rect>
+                              <animateTransform attributeName="transform" type="translate" values="-5,10;10,10;-5,10" dur="2s"
+                                  repeatCount="indefinite" />
+                          </g>
+                      </svg>`
+            } else if (aPoP > 10 && aPoP <= 20) {
+              //多雲
+              aimg = `<svg class="cloudy" viewbox="0 0 100 100">
+                          <g id="cloud">
+                              <circle cx="37" cy="40" r="15"></circle>
+                              <circle cx="55" cy="45" r="14"></circle>
+                              <rect width="70" height="30" x="10" y="40" rx="15"></rect>
+                              <animateTransform attributeName="transform" type="translate" values="10,0;-5,0;10,0" dur="2s"
+                                  repeatCount="indefinite" />
+                          </g>
+                          <g id="cloud2">
+                              <circle cx="32" cy="35" r="13"></circle>
+                              <circle cx="50" cy="40" r="12"></circle>
+                              <rect width="70" height="30" x="5" y="40" rx="15"></rect>
+                              <animateTransform attributeName="transform" type="translate" values="-5,20;10,20;-5,20" dur="2s"
+                                  repeatCount="indefinite" />
+                          </g>
+                          <animateTransform attributeName="transform" dur="0.1s" type="scale" values="1.5"/>
+                      </svg>`
+            } else if (aPoP > 20 && aPoP <= 30) {
+              //多雲時陰
+              aimg = `<svg class="overcast" viewbox="0 0 100 100">
+                          <g id="overcast_cloud">
+                              <circle cx="37" cy="40" r="15"></circle>
+                              <circle cx="55" cy="45" r="14"></circle>
+                              <rect width="70" height="30" x="10" y="40" rx="15"></rect>
+                              <animateTransform attributeName="transform" type="translate" values="10,0;-5,0;10,0" dur="2s"
+                                  repeatCount="indefinite" />
+                          </g>
+                          <g id="overcast_cloud2">
+                              <circle cx="32" cy="35" r="13"></circle>
+                              <circle cx="50" cy="40" r="12"></circle>
+                              <rect width="70" height="30" x="5" y="40" rx="15"></rect>
+                              <animateTransform attributeName="transform" type="translate" values="-5,20;10,20;-5,20" dur="2s"
+                                  repeatCount="indefinite" />
+                          </g>
+                      </svg>`
+            } else if (aPoP > 30 && aPoP <= 70) {
+              //下雨
+              aimg = `<svg class="rainy" viewbox="0 10 100 100">
+                          <g id="rain">
+                              <rect width="2" height="7" x="45" y="60" rx="1">
+                                  <animateTransform dur="1.5s" attributeName="transform" repeatCount="indefinite" type="rotate"
+                                      values="30,10,50;30,-150,-20" />
+                              </rect>
+                              <rect width="2" height="7" x="60" y="60" rx="1">
+                                  <animateTransform dur="1.8s" attributeName="transform" repeatCount="indefinite" type="rotate"
+                                      values="30,50,50;30,-150,-20" />
+                              </rect>
+                              <rect width="2" height="7" x="75" y="55" rx="1">
+                                  <animateTransform dur="1.3s" attributeName="transform" repeatCount="indefinite" type="rotate"
+                                      values="30,50,60;30,-150,-20" />
+                              </rect>
+                              <rect width="2" height="7" x="65" y="45" rx="1">
+                                  <animateTransform dur="1.2s" attributeName="transform" repeatCount="indefinite" type="rotate"
+                                      values="30,50,60;30,-150,-20" />
+                              </rect>
+                              <animateTransform link attributeName="transform" type="translate" values="-5,-5;10,0;-5,-5" dur="2s"
+                                  repeatCount="indefinite" />
+                          </g>
+                          <g id="overcast_cloud">
+                              <circle cx="37" cy="40" r="15"></circle>
+                              <circle cx="55" cy="45" r="14"></circle>
+                              <rect width="70" height="30" x="10" y="40" rx="15"></rect>
+                              <animateTransform attributeName="transform" type="translate" values="10,0;-5,0;10,0" dur="2s"
+                                  repeatCount="indefinite" />
+                          </g>
+                          <g id="overcast_cloud2">
+                              <circle cx="32" cy="35" r="13"></circle>
+                              <circle cx="50" cy="40" r="12"></circle>
+                              <rect width="70" height="30" x="5" y="40" rx="15"></rect>
+                              <animateTransform attributeName="transform" type="translate" values="-5,15;10,15;-5,15" dur="2s"
+                                  repeatCount="indefinite" />
+                          </g>
+                      </svg>`
+            } else if (aPoP > 70) {
+              //雷雨
+              aimg = `<svg class="rainy_thunder" viewbox="0 10 100 100">
+                          <g id="rain">
+                              <rect width="2" height="7" x="45" y="60" rx="1">
+                                  <animateTransform dur="0.6s" attributeName="transform" repeatCount="indefinite" type="rotate"
+                                      values="30,10,50;30,-150,-20" />
+                              </rect>
+                              <rect width="2" height="7" x="60" y="60" rx="1">
+                                  <animateTransform dur="0.8s" attributeName="transform" repeatCount="indefinite" type="rotate"
+                                      values="30,50,50;30,-150,-20" />
+                              </rect>
+                              <rect width="2" height="7" x="75" y="55" rx="1">
+                                  <animateTransform dur="0.7s" attributeName="transform" repeatCount="indefinite" type="rotate"
+                                      values="30,50,60;30,-150,-20" />
+                              </rect>
+                              <rect width="2" height="7" x="65" y="45" rx="1">
+                                  <animateTransform dur="0.5s" attributeName="transform" repeatCount="indefinite" type="rotate"
+                                      values="30,50,60;30,-150,-20" />
+                              </rect>
+                              <animateTransform link attributeName="transform" type="translate" values="-5,-5;10,0;-5,-5" dur="2s"
+                                  repeatCount="indefinite" />
+                          </g>
+                          <g>
+                              <polyline id="thunder" points="50,38 46,50 52,50 50,60 56,47 50,47 50,38">
+                                  <animateTransform dur="2.5s" attributeName="transform" repeatCount="indefinite" type="rotate"
+                                      values="30,50,60;30,-150,-20" />
+                              </polyline>
+                              <polyline id="thunder" points="50,38 46,50 52,50 50,60 56,47 50,47 50,38">
+                                  <animateTransform dur="3s" attributeName="transform" repeatCount="indefinite" type="rotate"
+                                      values="10,60,100;-100,200,10" />
+                              </polyline>
+                          </g>
+                          <g id="overcast_cloud">
+                              <circle cx="37" cy="40" r="15"></circle>
+                              <circle cx="55" cy="45" r="14"></circle>
+                              <rect width="70" height="30" x="10" y="40" rx="15"></rect>
+                              <animateTransform attributeName="transform" type="translate" values="10,0;-5,0;10,0" dur="2s"
+                                  repeatCount="indefinite" />
+                          </g>
+                          <g id="overcast_cloud2">
+                              <circle cx="32" cy="35" r="13"></circle>
+                              <circle cx="50" cy="40" r="12"></circle>
+                              <rect width="70" height="30" x="5" y="40" rx="15"></rect>
+                              <animateTransform attributeName="transform" type="translate" values="-5,15;10,15;-5,15" dur="2s"
+                                  repeatCount="indefinite" />
+                          </g>
+                      </svg>`
+            } else {
+              aimg = '<img class="weater-pic" alt="氣象圖">'
+            };
+            // aimg = '<img class="weater-pic" alt="氣象圖">'
+            card += `<div class="card hvr-sweep-to-top">
+                ${aimg}
+                <label class="locationName">${acityName}</label>
+                <label class="date">${adate}</label>
+                <label class="wx">${awx}</label>
+                <label class="PoP" tag-rain = ${aPoP}>降雨機率：${aPoP}%</label>
+                <label class="MinT">最低溫:${aMinT}</label>
+                <label class="MaxT">最高溫:${aMaxT}</label>
+              </div>`
+          })
+          //console.log(card)
+          cardsElement.innerHTML = card
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+
+
+      //此處取不到card的值???
+      // console.log(card);
+      // console.log(cardsElement)
+
+      // function test() {
+      //   let el_1 = document.querySelectorAll('.card')
+      //   console.log(el_1)
+      //   // el_1.forEach((x) => {
+      //   //   let el = document.querySelector('.PoP')
+      //   //   console.log(el)
+      //   //   el.getAttribute('tag-rain')
+      //   //   console.log(el.getAttribute('tag-rain'))
+      //   // })
+      // }
+    }
+
+
+
+
+    window.onload = test()
+  </script>
+
+
+
+
+  <!-- 
+     <script src="./js/01-天氣卡片.js"></script>
+
+     <script>
+      let cardsElement = document.querySelector('.cards')
+      //function 無法回傳值???
+      //let cards = getData()
+      console.log(getData())
+      //cardsElement.innerHTML = cards
+    </script> -->
+</body>
+
+</html>
