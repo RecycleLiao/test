@@ -1,0 +1,167 @@
+.sunny {
+  width: 150px;
+  height: 150px;
+  fill: rgba(255, 214, 51, 1);
+  stroke: rgba(255, 214, 51, 0.5);
+  stroke-dasharray: 3px;
+  stroke-width: 15px;
+}
+
+#sun {
+  fill: rgba(255, 214, 51, 1);
+  stroke: rgba(255, 214, 51, 0.5);
+  stroke-dasharray: 3px;
+  stroke-width: 15px;
+}
+
+.cloudy_sunny {
+  width: 150px;
+  height: 150px;
+}
+
+.cloudy {
+  width: 150px;
+  height: 150px;
+}
+
+#cloud {
+  fill: rgb(242, 249, 254);
+}
+
+#cloud2 {
+  fill: rgb(225, 241, 252);
+}
+
+.overcast {
+  width: 150px;
+  height: 150px;
+}
+
+#overcast_cloud {
+  fill: rgb(209, 209, 209);
+}
+
+#overcast_cloud2 {
+  fill: rgb(150, 146, 146);
+}
+
+.rainy {
+  width: 150px;
+  height: 150px;
+}
+.rainy_thunder{
+  width: 150px;
+  height: 150px;
+}
+
+#rain {
+  fill: rgb(221, 234, 247);
+}
+
+#thunder{
+  fill: rgba(255, 214, 51, 1);
+  stroke:rgba(255, 214, 51, 1);
+  stroke-width: 1;
+}
+
+.body {       
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-image: url('../img/weater_brg.jpg');
+  background-size: cover;
+  position: relative;
+  border: lawngreen 5px solid;
+}
+
+.cards {
+  top : 180px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+  width: 790px;
+
+} 
+
+.card {
+  margin: 5px;
+  width: 250px;
+  height: 400px;
+  background-color: burlywood;
+  border: 1px solid black;
+}
+
+.clearfix { 
+  clear: both;
+}
+
+/* .clearfix:after { 
+  content: " ";
+  display: block; 
+  clear: both;
+} */
+
+.locationName,
+.date,
+.wx,
+.PoP,
+.MinT,
+.CI,
+.MaxT {
+  font-size: 25px;
+  margin-left: 5px;
+  display: block;
+}
+
+.locationName{
+  font-size: 45px;
+  text-align: center;
+
+}
+
+.hvr-sweep-to-top {
+  display: inline-block;
+  vertical-align: middle;
+  /* -webkit-transform: perspective(1px) translateZ(0); */
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  position: relative;
+  /* -webkit-transition-property: color; */
+  transition-property: color;
+  /* -webkit-transition-duration: 0.3s; */
+  transition-duration: 1s;
+}
+.hvr-sweep-to-top:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #2098D1;
+  -webkit-transform: scaleY(0);
+  transform: scaleY(0);
+  -webkit-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+}
+.hvr-sweep-to-top:hover, .hvr-sweep-to-top:focus, .hvr-sweep-to-top:active {
+  color: white;
+}
+.hvr-sweep-to-top:hover:before, .hvr-sweep-to-top:focus:before, .hvr-sweep-to-top:active:before {
+  -webkit-transform: scaleY(1);
+  transform: scaleY(1);
+}
